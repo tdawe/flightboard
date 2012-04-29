@@ -1,5 +1,5 @@
 require 'sinatra'
 
 get '/' do
-  "flightboard...coming soon"
+  "<h1>flightboard</h1>coming soon"
 end
