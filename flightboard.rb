@@ -3,6 +3,7 @@ require 'vatsim'
 require 'data_mapper'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite://#{Dir.pwd}/development.db")
+DataMapper::Property::String.length(255)
 
 class Pilot
   include DataMapper::Resource
