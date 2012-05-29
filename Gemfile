@@ -2,6 +2,7 @@ source 'http://rubygems.org'
 gem 'sinatra'
 gem 'vatsim'
 gem 'datamapper'
+gem 'haml'
 
 group :development do
   gem 'sqlite3-ruby'
