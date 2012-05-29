@@ -5,46 +5,8 @@ require 'data_mapper'
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite://#{Dir.pwd}/development.db")
 DataMapper::Property::String.length(255)
 
-class Pilot
-  include DataMapper::Resource
-  property :callsign, String, :key => true
-  property :cid, String 
-  property :realname, String 
-  property :clienttype, String 
-  property :latitude, String 
-  property :longitude, String 
-  property :altitude, String 
-  property :groundspeed, String 
-  property :planned_aircraft, String 
-  property :planned_tascruise, String 
-  property :planned_depairport, String 
-  property :planned_altitude, String 
-  property :planned_destairport, String 
-  property :server, String 
-  property :protrevision, String 
-  property :rating, String 
-  property :transponder, String 
-  property :planned_revision, String 
-  property :planned_flighttype, String 
-  property :planned_deptime, String
-  property :planned_actdeptime, String
-  property :planned_hrsenroute, String 
-  property :planned_minenroute, String 
-  property :planned_hrsfuel, String 
-  property :planned_minfuel, String 
-  property :planned_altairport, String 
-  property :planned_remarks, String 
-  property :planned_route, String 
-  property :planned_depairport_lat, String 
-  property :planned_depairport_lon, String 
-  property :planned_destairport_lat, String 
-  property :planned_destairport_lon, String 
-  property :time_logon, String 
-  property :heading, String 
-  property :QNH_iHg, String 
-  property :QNH_Mb, String
-end
-DataMapper.finalize
+require './models.rb'
+
 DataMapper.auto_migrate!
 
 get '/refreshdata' do
