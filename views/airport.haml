@@ -1,0 +1,37 @@
+%h3
+  #{"Current Time: " + Time.now.getgm.to_s}
+
+%h2
+  Arrivals
+
+%table{:border => 1, :cellspacing => 0}
+  %tbody
+    %th
+      Ident
+    %th
+      Type
+    %th
+      From
+    - @arrivals.each do |arrival|
+      %tr
+        %td= arrival.callsign
+        %td= arrival.planned_aircraft
+        %td= arrival.planned_depairport
+
+%h2
+  Departures
+
+%table{:border => 1, :cellspacing => 0}
+  %tbody
+    %th
+      Ident
+    %th
+      Type
+    %th
+      To
+    - @departures.each do |departure|
+      %tr
+        %td= departure.callsign
+        %td= departure.planned_aircraft
+        %td= departure.planned_destairport
+
