@@ -1,13 +1,14 @@
 require 'sinatra'
 require 'vatsim'
 require 'data_mapper'
+require 'haml'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite://#{Dir.pwd}/development.db")
 DataMapper::Property::String.length(255)
 
 require './models.rb'
 
-DataMapper.auto_migrate!
+DataMapper.auto_upgrade!
 
 get '/refreshdata' do
   output = ""
@@ -22,7 +23,8 @@ get '/refreshdata' do
 end
 
 get '/' do
-  "<h1><a href=\"/pilots\">#{Pilot.all.length} pilots</a></h1>"
+  @pilots = Pilot.all
+  haml :index
 end
 
 get '/pilots' do
@@ -37,13 +39,7 @@ get '/pilots' do
 end
 
 get '/pilots/:callsign' do
-  pilot = Pilot.get(params[:callsign])
-
-  output = "<h1>#{pilot.callsign}</h1>"
-
-  output += "<p>#{pilot.planned_depairport} - #{pilot.planned_destairport}</p>"
-
-  output
-
+  @pilot = Pilot.get(params[:callsign])
+  haml :pilots
 end
 
