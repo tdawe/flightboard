@@ -1,5 +1,4 @@
-%h1
-  #{@pilot.callsign}
-%p
-  #{@pilot.planned_depairport} - #{@pilot.planned_destairport}
+- @pilots.each do |pilot|
+  %p
+    %a(href="/pilots/#{pilot.callsign}") #{pilot.callsign}
 
