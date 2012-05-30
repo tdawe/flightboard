@@ -1,3 +1,8 @@
+require 'data_mapper'
+
+DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite://#{File.dirname(__FILE__)}/development.db")
+DataMapper::Property::String.length(255)
+
 class Pilot
   include DataMapper::Resource
   property :callsign, String, :key => true
@@ -39,3 +44,4 @@ class Pilot
 end
 DataMapper.finalize
 
+DataMapper.auto_upgrade!
