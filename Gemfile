@@ -5,7 +5,7 @@ gem 'datamapper'
 gem 'haml'
 
 group :development do
-  gem 'sqlite3-ruby'
+  gem 'sqlite3'
   gem 'dm-sqlite-adapter'
   gem 'multi_json', '~> 1.0.3' 
   gem 'rake'
