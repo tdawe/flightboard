@@ -8,6 +8,7 @@ group :development do
   gem 'sqlite3-ruby'
   gem 'dm-sqlite-adapter'
   gem 'multi_json', '~> 1.0.3' 
+  gem 'rake'
 end
 
 group :test do
