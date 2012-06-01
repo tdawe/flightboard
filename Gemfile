@@ -7,9 +7,12 @@ gem 'haml'
 group :development do
   gem 'sqlite3-ruby'
   gem 'dm-sqlite-adapter'
+  gem 'multi_json', '~> 1.0.3' 
 end
 
 group :test do
+  gem 'webmock'
+  gem 'simplecov'
   gem 'rack-test'
   gem 'rspec'
 end
