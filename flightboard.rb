@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'haml'
+require 'vatsim'
 require File.dirname(__FILE__) + '/models.rb'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite://#{Dir.pwd}/development.db")
