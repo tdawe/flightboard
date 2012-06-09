@@ -12,11 +12,26 @@
       Type
     %th
       From
+    %th
+      Scheduled Departure
+    %th
+      Scheduled Arrival
+    %th
+      Estimated Arrival
+    %th
+      Status
+    %th
+      Flight Status
     - @arrivals.each do |arrival|
       %tr
         %td= arrival.callsign
         %td= arrival.planned_aircraft
         %td= arrival.planned_depairport
+        %td= arrival.scheduled_departure_time
+        %td= arrival.scheduled_arrival_time
+        %td= arrival.estimated_arrival_time
+        %td= arrival.arrival_status
+        %td= arrival.flight_status
 
 %h2
   Departures
@@ -29,9 +44,24 @@
       Type
     %th
       To
+    %th
+      Scheduled Departure
+    %th
+      Scheduled Arrival
+    %th
+      Estimated Arrival
+    %th
+      Status
+    %th
+      Flight Status
     - @departures.each do |departure|
       %tr
         %td= departure.callsign
         %td= departure.planned_aircraft
         %td= departure.planned_destairport
+        %td= departure.scheduled_departure_time
+        %td= departure.scheduled_arrival_time
+        %td= departure.estimated_arrival_time
+        %td= departure.arrival_status
+        %td= departure.flight_status
 
