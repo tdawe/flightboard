@@ -41,6 +41,11 @@ class Pilot
   property :heading, String
   property :QNH_iHg, String
   property :QNH_Mb, String
+  property :scheduled_departure_time, String
+  property :scheduled_arrival_time, String
+  property :estimated_arrival_time, String
+  property :arrival_status, String
+  property :flight_status, String
 end
 DataMapper.finalize
 
