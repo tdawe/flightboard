@@ -61,7 +61,7 @@ end
 
 get '/airports/:icao' do
   @arrivals = Pilot.all(:planned_destairport => params[:icao], :order => [:scheduled_arrival_time.asc])
-  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:scheduled_arrival_time.asc])
+  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:scheduled_departure_time.asc])
   haml :airport
 end
 
