@@ -14,7 +14,7 @@ get '/refreshdata' do
   output = ""
   data = Vatsim::Data.new
   Pilot.transaction do
-    now = Time.parse(data.general['update'])
+    now = Time.parse("#{data.general['update']}Z")
     Pilot.destroy
     data.pilots.each { |pilot|
       _scheduled_departure_time = scheduled_departure_time now, pilot
