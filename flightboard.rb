@@ -55,6 +55,7 @@ get '/airports' do
     @airports << pilot.planned_depairport if !@airports.include?(pilot.planned_depairport)
     @airports << pilot.planned_destairport if !@airports.include?(pilot.planned_destairport)
   }
+  @airports.sort!
   haml :airports
 end
 
