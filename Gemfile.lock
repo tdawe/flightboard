@@ -103,6 +103,7 @@ DEPENDENCIES
   dm-postgres-adapter
   dm-sqlite-adapter
   haml
+  jdbc-sqlite3
   multi_json (~> 1.0.3)
   pg
   rack-test
