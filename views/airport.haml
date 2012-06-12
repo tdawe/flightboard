@@ -27,9 +27,9 @@
         %td= arrival.callsign
         %td= arrival.planned_aircraft
         %td= arrival.planned_depairport
-        %td= arrival.scheduled_departure_time
-        %td= arrival.scheduled_arrival_time
-        %td= arrival.estimated_arrival_time
+        %td{:align => :center}= arrival.scheduled_departure_time.nil? ? "" : Time.parse(arrival.scheduled_departure_time).strftime("%R %Z")
+        %td{:align => :center}= arrival.scheduled_arrival_time.nil? ? "" : Time.parse(arrival.scheduled_arrival_time).strftime("%R %Z")
+        %td{:align => :center}= arrival.estimated_arrival_time.nil? ? "" : Time.parse(arrival.estimated_arrival_time).strftime("%R %Z")
         %td= arrival.arrival_status
         %td= arrival.flight_status
 
@@ -59,9 +59,9 @@
         %td= departure.callsign
         %td= departure.planned_aircraft
         %td= departure.planned_destairport
-        %td= departure.scheduled_departure_time
-        %td= departure.scheduled_arrival_time
-        %td= departure.estimated_arrival_time
+        %td{:align => :center}= departure.scheduled_departure_time.nil? ? "" : Time.parse(departure.scheduled_departure_time).strftime("%R %Z")
+        %td{:align => :center}= departure.scheduled_arrival_time.nil? ? "" : Time.parse(departure.scheduled_arrival_time).strftime("%R %Z")
+        %td{:align => :center}= departure.estimated_arrival_time.nil? ? "" : Time.parse(departure.estimated_arrival_time).strftime("%R %Z")
         %td= departure.arrival_status
         %td= departure.flight_status
 
