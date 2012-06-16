@@ -3,6 +3,7 @@ gem 'sinatra'
 gem 'vatsim'
 gem 'datamapper'
 gem 'haml'
+gem 'sinatra-contrib'
 
 group :development do
   gem 'sqlite3', :platform => [:ruby, :mswin, :mingw]

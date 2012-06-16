@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/content_for'
 require 'haml'
 require 'vatsim'
 require File.dirname(__FILE__) + '/models.rb'

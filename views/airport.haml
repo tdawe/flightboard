@@ -1,67 +1,60 @@
+- content_for :some_key do
+  %script{:src => "/airports.js", :type => "text/javascript"}
+  %script
+    var icao = "#{params[:icao]}";
+  %style{:type => "text/css"}
+    \tr.on_time { background-color: #00ff00; }
+    \tr.late { background-color: #DB2929; }
+    \tr.early { background-color: #4169E1; }
+
 %h3
   #{"Current Time: " + Time.now.getgm.to_s}
 
 %h2
   Arrivals
 
-%table{:border => 1, :cellspacing => 0}
+%table{:border => 1, :cellspacing => 0, :id => "arrivals"}
+  %thead
+    %tr
+      %th
+        Ident
+      %th
+        Type
+      %th
+        From
+      %th
+        Scheduled Departure
+      %th
+        Scheduled Arrival
+      %th
+        Estimated Arrival
+      %th
+        Status
+      %th
+        Flight Status
   %tbody
-    %th
-      Ident
-    %th
-      Type
-    %th
-      From
-    %th
-      Scheduled Departure
-    %th
-      Scheduled Arrival
-    %th
-      Estimated Arrival
-    %th
-      Status
-    %th
-      Flight Status
-    - @arrivals.each do |arrival|
-      %tr
-        %td= arrival.callsign
-        %td= arrival.planned_aircraft
-        %td= arrival.planned_depairport
-        %td{:align => :center}= arrival.scheduled_departure_time.nil? ? "" : Time.parse(arrival.scheduled_departure_time).strftime("%R %Z")
-        %td{:align => :center}= arrival.scheduled_arrival_time.nil? ? "" : Time.parse(arrival.scheduled_arrival_time).strftime("%R %Z")
-        %td{:align => :center}= arrival.estimated_arrival_time.nil? ? "" : Time.parse(arrival.estimated_arrival_time).strftime("%R %Z")
-        %td= arrival.arrival_status
-        %td= arrival.flight_status
 
 %h2
   Departures
 
-%table{:border => 1, :cellspacing => 0}
+%table{:border => 1, :cellspacing => 0, :id => "departures"}
+  %thead
+    %tr
+      %th
+        Ident
+      %th
+        Type
+      %th
+        To
+      %th
+        Scheduled Departure
+      %th
+        Scheduled Arrival
+      %th
+        Estimated Arrival
+      %th
+        Status
+      %th
+        Flight Status
   %tbody
-    %th
-      Ident
-    %th
-      Type
-    %th
-      To
-    %th
-      Scheduled Departure
-    %th
-      Scheduled Arrival
-    %th
-      Estimated Arrival
-    %th
-      Status
-    %th
-      Flight Status
-    - @departures.each do |departure|
-      %tr
-        %td= departure.callsign
-        %td= departure.planned_aircraft
-        %td= departure.planned_destairport
-        %td{:align => :center}= departure.scheduled_departure_time.nil? ? "" : Time.parse(departure.scheduled_departure_time).strftime("%R %Z")
-        %td{:align => :center}= departure.scheduled_arrival_time.nil? ? "" : Time.parse(departure.scheduled_arrival_time).strftime("%R %Z")
-        %td{:align => :center}= departure.estimated_arrival_time.nil? ? "" : Time.parse(departure.estimated_arrival_time).strftime("%R %Z")
-        %td= departure.arrival_status
-        %td= departure.flight_status
 
