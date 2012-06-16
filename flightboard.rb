@@ -65,6 +65,27 @@ get '/airports/:icao' do
   haml :airport
 end
 
+
+get '/airports/:icao/arrivals.json' do
+  @arrivals = Pilot.all(:planned_destairport => params[:icao], :order => [:scheduled_arrival_time.asc])
+
+  @arrivals.each { |arrival|
+    arrival.scheduled_departure_time = arrival.scheduled_departure_time.nil? ? "" : Time.parse(arrival.scheduled_departure_time).strftime("%R %Z")
+    arrival.scheduled_arrival_time = arrival.scheduled_arrival_time.nil? ? "" : Time.parse(arrival.scheduled_arrival_time).strftime("%R %Z")
+    arrival.estimated_arrival_time = arrival.estimated_arrival_time.nil? ? "" : Time.parse(arrival.estimated_arrival_time).strftime("%R %Z")
+  }
+  @arrivals.to_json
+end
+
+get '/airports/:icao/departures.json' do
+  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:scheduled_departure_time.asc])
+  @departures.each { |departure|
+    departure.scheduled_departure_time = departure.scheduled_departure_time.nil? ? "" : Time.parse(departure.scheduled_departure_time).strftime("%R %Z")
+    departure.scheduled_arrival_time = departure.scheduled_arrival_time.nil? ? "" : Time.parse(departure.scheduled_arrival_time).strftime("%R %Z")
+    departure.estimated_arrival_time = departure.estimated_arrival_time.nil? ? "" : Time.parse(departure.estimated_arrival_time).strftime("%R %Z")
+  }
+  @departures.to_json
+end
 ##############################333
 
 def scheduled_departure_time now, pilot
