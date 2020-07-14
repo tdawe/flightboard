@@ -68,7 +68,7 @@ end
 
 
 get '/airports/:icao/arrivals.json' do
-  @arrivals = Pilot.all(:planned_destairport => params[:icao], :order => [:scheduled_arrival_time.asc])
+  @arrivals = Pilot.all(:planned_destairport => params[:icao], :order => [:flight_status.asc])
 
   @arrivals.each { |arrival|
     arrival.scheduled_departure_time = arrival.scheduled_departure_time.nil? ? "" : Time.parse(arrival.scheduled_departure_time).strftime("%R %Z")
@@ -79,7 +79,7 @@ get '/airports/:icao/arrivals.json' do
 end
 
 get '/airports/:icao/departures.json' do
-  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:scheduled_departure_time.asc])
+  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:flight_status.desc])
   @departures.each { |departure|
     departure.scheduled_departure_time = departure.scheduled_departure_time.nil? ? "" : Time.parse(departure.scheduled_departure_time).strftime("%R %Z")
     departure.scheduled_arrival_time = departure.scheduled_arrival_time.nil? ? "" : Time.parse(departure.scheduled_arrival_time).strftime("%R %Z")
@@ -97,6 +97,8 @@ def scheduled_departure_time now, pilot
   if !departure_time.nil?
     hours = (pilot.planned_deptime.to_i / 100).to_i;
     minutes = pilot.planned_deptime.to_i - ((pilot.planned_deptime.to_i / 100).to_i * 100)
+    hours = 0 if hours > 23
+    minutes = 0 if minutes > 59
     departure_time = Time.gm(now.year, now.month, now.day, hours, minutes)
   end
 
