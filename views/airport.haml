@@ -3,17 +3,27 @@
   %script
     var icao = "#{params[:icao]}";
   %style{:type => "text/css"}
+    \table { border-collapse: collapse; border-bottom: solid 1px #000000; }
+    \tr { border: none; }
+    \td { padding: 3px; border-right: solid 1px #000000; border-left: solid 1px #000000; }
+    \th { padding: 5px; border: solid 1px #000000; }
+    \tr:nth-child(even) {background: #CCC}
+    \tr:nth-child(odd) {background: #FFF}
     \tr.on_time { background-color: #00ff00; }
     \tr.late { background-color: #DB2929; }
     \tr.early { background-color: #4169E1; }
 
-%h3
-  #{"Current Time: " + Time.now.getgm.to_s}
+%h3{:id => "currenttime"}
+
+%h3{:id => "countdown"}
 
 %h2
   Arrivals
-
-%table{:border => 1, :cellspacing => 0, :id => "arrivals"}
+  
+%h3
+  Arrived
+ 
+%table{:id => "arrivals-arrived"}
   %thead
     %tr
       %th
@@ -32,12 +42,69 @@
         Status
       %th
         Flight Status
+      %th
+        Plain Status
+  %tbody
+
+%h3
+  On The Way
+
+%table{:id => "arrivals-on-the-way"}
+  %thead
+    %tr
+      %th
+        Ident
+      %th
+        Type
+      %th
+        From
+      %th
+        Scheduled Departure
+      %th
+        Scheduled Arrival
+      %th
+        Estimated Arrival
+      %th
+        Status
+      %th
+        Flight Status
+      %th
+        Plain Status
+  %tbody
+  
+%h3
+  At Departure Airport
+
+%table{:id => "arrivals-at-departure-airport"}
+  %thead
+    %tr
+      %th
+        Ident
+      %th
+        Type
+      %th
+        From
+      %th
+        Scheduled Departure
+      %th
+        Scheduled Arrival
+      %th
+        Estimated Arrival
+      %th
+        Status
+      %th
+        Flight Status
+      %th
+        Plain Status
   %tbody
 
 %h2
   Departures
 
-%table{:border => 1, :cellspacing => 0, :id => "departures"}
+%h3
+  Boarding
+
+%table{:id => "departures-boarding"}
   %thead
     %tr
       %th
@@ -56,5 +123,62 @@
         Status
       %th
         Flight Status
+      %th
+        Plain Status
   %tbody
+
+%h3
+  Departed
+
+%table{:id => "departures-departed"}
+  %thead
+    %tr
+      %th
+        Ident
+      %th
+        Type
+      %th
+        To
+      %th
+        Scheduled Departure
+      %th
+        Scheduled Arrival
+      %th
+        Estimated Arrival
+      %th
+        Status
+      %th
+        Flight Status
+      %th
+        Plain Status
+  %tbody
+ 
+ 
+%h3
+  At Arrival Airport
+
+%table{:id => "departures-at-arrival-airport"}
+  %thead
+    %tr
+      %th
+        Ident
+      %th
+        Type
+      %th
+        To
+      %th
+        Scheduled Departure
+      %th
+        Scheduled Arrival
+      %th
+        Estimated Arrival
+      %th
+        Status
+      %th
+        Flight Status
+      %th
+        Plain Status
+  %tbody
+
+
 

@@ -23,7 +23,10 @@ get '/refreshdata' do
       _estimated_arrival_time = estimated_arrival_time now, pilot
       _arrival_status = arrival_status now, pilot
       _flight_status = flight_status pilot
-      Pilot.create(:callsign => pilot.callsign, :cid => pilot.cid, :realname => pilot.realname, :clienttype => pilot.clienttype, :latitude => pilot.latitude, :longitude => pilot.longitude, :altitude => pilot.altitude, :groundspeed => pilot.groundspeed, :planned_aircraft =>           pilot.planned_aircraft, :planned_tascruise => pilot.planned_tascruise, :planned_depairport => pilot.planned_depairport, :planned_altitude => pilot.planned_altitude, :planned_destairport => pilot.planned_destairport, :server => pilot.server, :protrevision => pilot.protrevision, :rating => pilot.rating, :transponder => pilot.transponder, :planned_revision => pilot.planned_revision, :planned_flighttype => pilot.planned_flighttype, :planned_deptime => pilot.planned_deptime, :planned_actdeptime => pilot.planned_actdeptime, :planned_hrsenroute => pilot.planned_minenroute, :planned_hrsfuel => pilot.planned_minfuel, :planned_altairport => pilot.planned_altairport, :planned_remarks => pilot.planned_remarks, :planned_route => pilot.planned_route, :planned_depairport_lat => pilot.planned_depairport_lat, :planned_depairport_lon => pilot.planned_depairport_lon, :planned_destairport_lat => pilot.planned_destairport_lat, :planned_destairport_lon => pilot.planned_destairport_lon, :time_logon => pilot.time_logon, :heading => pilot.heading, :QNH_iHg => pilot.QNH_iHg, :QNH_Mb => pilot.QNH_Mb, :scheduled_departure_time => _scheduled_departure_time, :scheduled_arrival_time => _scheduled_arrival_time, :estimated_arrival_time => _estimated_arrival_time, :arrival_status => _arrival_status, :flight_status => _flight_status)
+      _plain_text_status = plain_text_status pilot
+      _distance_traveled = distance_traveled pilot
+      _distance_remaining = distance_remaining pilot
+      Pilot.create(:callsign => pilot.callsign, :cid => pilot.cid, :realname => pilot.realname, :clienttype => pilot.clienttype, :latitude => pilot.latitude, :longitude => pilot.longitude, :altitude => pilot.altitude, :groundspeed => pilot.groundspeed, :planned_aircraft =>           pilot.planned_aircraft, :planned_tascruise => pilot.planned_tascruise, :planned_depairport => pilot.planned_depairport, :planned_altitude => pilot.planned_altitude, :planned_destairport => pilot.planned_destairport, :server => pilot.server, :protrevision => pilot.protrevision, :rating => pilot.rating, :transponder => pilot.transponder, :planned_revision => pilot.planned_revision, :planned_flighttype => pilot.planned_flighttype, :planned_deptime => pilot.planned_deptime, :planned_actdeptime => pilot.planned_actdeptime, :planned_hrsenroute => pilot.planned_minenroute, :planned_hrsfuel => pilot.planned_minfuel, :planned_altairport => pilot.planned_altairport, :planned_remarks => pilot.planned_remarks, :planned_route => pilot.planned_route, :planned_depairport_lat => pilot.planned_depairport_lat, :planned_depairport_lon => pilot.planned_depairport_lon, :planned_destairport_lat => pilot.planned_destairport_lat, :planned_destairport_lon => pilot.planned_destairport_lon, :time_logon => pilot.time_logon, :heading => pilot.heading, :QNH_iHg => pilot.QNH_iHg, :QNH_Mb => pilot.QNH_Mb, :scheduled_departure_time => _scheduled_departure_time, :scheduled_arrival_time => _scheduled_arrival_time, :estimated_arrival_time => _estimated_arrival_time, :arrival_status => _arrival_status, :flight_status => _flight_status, :plain_text_status => _plain_text_status, :distance_traveled => _distance_traveled, :distance_remaining => _distance_remaining)
     }
   end
   "Loaded #{Pilot.all.length} pilots"
@@ -66,9 +69,8 @@ get '/airports/:icao' do
   haml :airport
 end
 
-
 get '/airports/:icao/arrivals.json' do
-  @arrivals = Pilot.all(:planned_destairport => params[:icao], :order => [:flight_status.asc])
+  @arrivals = Pilot.all(:planned_destairport => params[:icao], :order => [:distance_remaining.asc])
 
   @arrivals.each { |arrival|
     arrival.scheduled_departure_time = arrival.scheduled_departure_time.nil? ? "" : Time.parse(arrival.scheduled_departure_time).strftime("%R %Z")
@@ -79,7 +81,7 @@ get '/airports/:icao/arrivals.json' do
 end
 
 get '/airports/:icao/departures.json' do
-  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:flight_status.desc])
+  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:distance_traveled.asc])
   @departures.each { |departure|
     departure.scheduled_departure_time = departure.scheduled_departure_time.nil? ? "" : Time.parse(departure.scheduled_departure_time).strftime("%R %Z")
     departure.scheduled_arrival_time = departure.scheduled_arrival_time.nil? ? "" : Time.parse(departure.scheduled_arrival_time).strftime("%R %Z")
@@ -143,6 +145,23 @@ def arrival_status now, pilot
   status = "Late" if estimated_arrival_time(now, pilot) > scheduled_arrival_time(now, pilot)
   status = "Early" if estimated_arrival_time(now, pilot) < scheduled_arrival_time(now, pilot)
   return status
+end
+
+def distance_traveled pilot
+  return haversine_distance(pilot.latitude.to_f, pilot.longitude.to_f, pilot.planned_depairport_lat.to_f, pilot.planned_depairport_lon.to_f).round(0)
+end
+
+def distance_remaining pilot
+  return haversine_distance(pilot.latitude.to_f, pilot.longitude.to_f, pilot.planned_destairport_lat.to_f, pilot.planned_destairport_lon.to_f).round(0)
+end
+
+def plain_text_status pilot
+  distance_from_depairport = haversine_distance(pilot.latitude.to_f, pilot.longitude.to_f, pilot.planned_depairport_lat.to_f, pilot.planned_depairport_lon.to_f).round(0)
+  distance_to_destairport = haversine_distance(pilot.latitude.to_f, pilot.longitude.to_f, pilot.planned_destairport_lat.to_f, pilot.planned_destairport_lon.to_f).round(0)
+  groundspeed = pilot.groundspeed
+  altitude = pilot.altitude
+
+  return "Traveled: #{distance_from_depairport} Remaining: #{distance_to_destairport} Speed: #{groundspeed} Altitude: #{altitude}"
 end
 
 RAD_PER_DEG = 0.017453293

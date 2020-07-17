@@ -46,6 +46,9 @@ class Pilot
   property :estimated_arrival_time, String
   property :arrival_status, String
   property :flight_status, String
+  property :plain_text_status, String
+  property :distance_traveled, Integer
+  property :distance_remaining, Integer 
 end
 DataMapper.finalize
 

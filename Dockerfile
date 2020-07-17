@@ -12,6 +12,6 @@ COPY Gemfile Gemfile.lock ./
 RUN bundle config --delete frozen
 RUN bundle install
 
-COPY . .
+#COPY . .
 
 CMD ["rackup", "config.ru"]
