@@ -46,7 +46,9 @@ function load_boards()
 
 function load_arrivals(data)
 {
-    $("#arrivals > tbody > tr").remove();
+    $("#arrivals-on-the-way > tbody > tr").remove();
+    $("#arrivals-arrived > tbody > tr").remove();
+    $("#arrivals-at-departure-airport > tbody > tr").remove();
 
     $.each(data, function(index, arrival) {
         table = "arrivals-on-the-way"
@@ -78,7 +80,9 @@ function load_arrivals(data)
 
 function load_departures(data)
 {
-    $("#departures > tbody > tr").remove();
+    $("#departures-on-the-way > tbody > tr").remove();
+    $("#departures-arrived-at-arrival-airport > tbody > tr").remove();
+    $("#departures-boarding > tbody > tr").remove();
 
     $.each(data, function(index, departure) {
         table = "departures-on-the-way"
