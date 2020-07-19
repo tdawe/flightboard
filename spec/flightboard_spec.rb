@@ -12,7 +12,7 @@ describe "Sinatra App" do
     stub_request(:get, "http://fsproshop.com/servinfo/vatsim-data.txt").to_return(:body => File.new(File.dirname(__FILE__) + "/vatsim-data.txt"))
     stub_request(:get, "http://info.vroute.net/vatsim-data.txt").to_return(:body => File.new(File.dirname(__FILE__) + "/vatsim-data.txt"))
     stub_request(:get, "http://data.vattastic.com/vatsim-data.txt").to_return(:body => File.new(File.dirname(__FILE__) + "/vatsim-data.txt")) 
-    get '/refreshdata'
+    refreshdata
   end
 
   it "should respond to GET with correct number of pilots and airports" do

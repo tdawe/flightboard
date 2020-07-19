@@ -2,7 +2,18 @@ require 'sinatra'
 require 'sinatra/content_for'
 require 'haml'
 require 'vatsim'
+require 'logger'
 require File.dirname(__FILE__) + '/models.rb'
+
+$stdout.sync = true
+@logger = Logger.new(STDOUT)
+
+Thread.new do # trivial example work thread
+  while true do
+     refreshdata
+     sleep 120
+  end
+end
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite://#{Dir.pwd}/development.db")
 DataMapper::Property::String.length(255)
@@ -11,7 +22,7 @@ require './models.rb'
 
 DataMapper.auto_upgrade!
 
-get '/refreshdata' do
+def refreshdata
   output = ""
   data = Vatsim::Data.new
   Pilot.transaction do
@@ -29,7 +40,7 @@ get '/refreshdata' do
       Pilot.create(:callsign => pilot.callsign, :cid => pilot.cid, :realname => pilot.realname, :clienttype => pilot.clienttype, :latitude => pilot.latitude, :longitude => pilot.longitude, :altitude => pilot.altitude, :groundspeed => pilot.groundspeed, :planned_aircraft =>           pilot.planned_aircraft, :planned_tascruise => pilot.planned_tascruise, :planned_depairport => pilot.planned_depairport, :planned_altitude => pilot.planned_altitude, :planned_destairport => pilot.planned_destairport, :server => pilot.server, :protrevision => pilot.protrevision, :rating => pilot.rating, :transponder => pilot.transponder, :planned_revision => pilot.planned_revision, :planned_flighttype => pilot.planned_flighttype, :planned_deptime => pilot.planned_deptime, :planned_actdeptime => pilot.planned_actdeptime, :planned_hrsenroute => pilot.planned_minenroute, :planned_hrsfuel => pilot.planned_minfuel, :planned_altairport => pilot.planned_altairport, :planned_remarks => pilot.planned_remarks, :planned_route => pilot.planned_route, :planned_depairport_lat => pilot.planned_depairport_lat, :planned_depairport_lon => pilot.planned_depairport_lon, :planned_destairport_lat => pilot.planned_destairport_lat, :planned_destairport_lon => pilot.planned_destairport_lon, :time_logon => pilot.time_logon, :heading => pilot.heading, :QNH_iHg => pilot.QNH_iHg, :QNH_Mb => pilot.QNH_Mb, :scheduled_departure_time => _scheduled_departure_time, :scheduled_arrival_time => _scheduled_arrival_time, :estimated_arrival_time => _estimated_arrival_time, :arrival_status => _arrival_status, :flight_status => _flight_status, :plain_text_status => _plain_text_status, :distance_traveled => _distance_traveled, :distance_remaining => _distance_remaining)
     }
   end
-  "Loaded #{Pilot.all.length} pilots"
+  @logger.info("Loaded #{Pilot.all.length} pilots")
 end
 
 get '/' do
@@ -131,7 +142,7 @@ def flight_status pilot
   status = "Left Gate" if distance_from_depairport < 5 and pilot.groundspeed.to_i > 0
   status = "Departing" if distance_from_depairport < 25 and pilot.groundspeed.to_i > 0
   status = "Arriving" if distance_from_destairport < 50 and pilot.groundspeed.to_i > 0
-  status = "Taxiing to Gate" if distance_from_destairport < 5 and pilot.groundspeed.to_i > 0
+  status = "Taxiing to Gate" if distance_from_destairport < 5 and pilot.groundspeed.to_i < 50
   status = "At Gate" if distance_from_destairport < 5 and pilot.groundspeed.to_i == 0
   status
 end

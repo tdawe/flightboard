@@ -3,7 +3,7 @@
   %script
     var icao = "#{params[:icao]}";
   %style{:type => "text/css"}
-    \table { border-collapse: collapse; border-bottom: solid 1px #000000; }
+    \table { width: 90%; border-collapse: collapse; border-bottom: solid 1px #000000; }
     \tr { border: none; }
     \td { padding: 3px; border-right: solid 1px #000000; border-left: solid 1px #000000; }
     \th { padding: 5px; border: solid 1px #000000; }
@@ -13,9 +13,10 @@
     \tr.late { background-color: #DB2929; }
     \tr.early { background-color: #4169E1; }
 
-%h3{:id => "currenttime"}
+%h1{:style => "display: inline", :onclick => "load_boards();"}
+  #{params[:icao]} - 
 
-%h3{:id => "countdown"}
+%h1{:style => "display: inline", :id => "currenttime"}
 
 %h2
   Arrivals
@@ -180,5 +181,6 @@
         Plain Status
   %tbody
 
+%h5{:id => "countdown"}
 
 

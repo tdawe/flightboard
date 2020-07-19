@@ -3,10 +3,6 @@
   %head
     %title flightboard
     %script{:src => "/jquery.js", :type => "text/javascript"}
-    %script{:src => "/scripts.js", :type => "text/javascript"}
     = yield_content :some_key
   %body
-    %h1 flightboard
-    %p
-      =yield
-
+    =yield

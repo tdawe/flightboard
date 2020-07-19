@@ -1,3 +1,6 @@
+var updateTimeout;
+var downloadTimer;
+
 $(document).ready(function() {
     load_boards();
     timer();
@@ -6,7 +9,8 @@ $(document).ready(function() {
 
 function timer() {
     var timeleft = 150;
-    var downloadTimer = setInterval(function(){     
+    clearInterval(downloadTimer);
+    downloadTimer = setInterval(function(){     
       updateTime();
       if(timeleft <= 0){
         clearInterval(downloadTimer);
@@ -39,9 +43,11 @@ function checkTime(i) {
 
 function load_boards()
 {
+    clearTimeout(updateTimeout);
+    timer();
     $.getJSON("/airports/"+icao+"/arrivals.json", function(data) { load_arrivals(data) });
     $.getJSON("/airports/"+icao+"/departures.json", function(data) { load_departures(data) });
-    setTimeout("load_boards(); timer();", 150000);
+    updateTimeout = setTimeout("load_boards(); timer();", 150000);
 }
 
 function load_arrivals(data)
@@ -80,16 +86,16 @@ function load_arrivals(data)
 
 function load_departures(data)
 {
-    $("#departures-on-the-way > tbody > tr").remove();
-    $("#departures-arrived-at-arrival-airport > tbody > tr").remove();
+    $("#departures-departed > tbody > tr").remove();
+    $("#departures-at-arrival-airport > tbody > tr").remove();
     $("#departures-boarding > tbody > tr").remove();
 
     $.each(data, function(index, departure) {
-        table = "departures-on-the-way"
+        table = "departures-departed"
         if(departure.flight_status == "On the way" || departure.flight_status == "Departing")
-            table = "departures-on-the-way"
-        else if(departure.flight_status == "At the gate" || departure.flight_status == "Taxxing to the gate")
-            table = "departures-arrived-at-arrival-airport"
+            table = "departures-departed"
+        else if(departure.flight_status == "At Gate" || departure.flight_status == "Taxiing to Gate")
+            table = "departures-at-arrival-airport"
         else if(departure.flight_status == "Boarding")
             table = "departures-boarding"
         
