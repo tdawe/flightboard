@@ -20,166 +20,172 @@
 
 %h2
   Arrivals
+
+%div{:id => "div-arrivals-arrived"}
+  %h3
+    Arrived
+
+  %table{:id => "arrivals-arrived"}
+    %thead
+      %tr
+        %th
+          Ident
+        %th
+          Type
+        %th
+          To
+        %th
+          Scheduled Departure
+        %th
+          Scheduled Arrival
+        %th
+          Estimated Arrival
+        %th
+          Status
+        %th
+          Flight Status
+        %th
+          Plain Status
+    %tbody
+
+%div{:id => "div-arrivals-on-the-way"}
+  %h3
+    On The Way
+
+  %table{:id => "arrivals-on-the-way"}
+    %thead
+      %tr
+        %th
+          Ident
+        %th
+          Type
+        %th
+          To
+        %th
+          Scheduled Departure
+        %th
+          Scheduled Arrival
+        %th
+          Estimated Arrival
+        %th
+          Status
+        %th
+          Flight Status
+        %th
+          Plain Status
+    %tbody
   
-%h3
-  Arrived
- 
-%table{:id => "arrivals-arrived"}
-  %thead
-    %tr
-      %th
-        Ident
-      %th
-        Type
-      %th
-        From
-      %th
-        Scheduled Departure
-      %th
-        Scheduled Arrival
-      %th
-        Estimated Arrival
-      %th
-        Status
-      %th
-        Flight Status
-      %th
-        Plain Status
-  %tbody
+%div{:id => "div-arrivals-at-departure-airport"}
+  %h3
+    At Departure Airport
 
-%h3
-  On The Way
-
-%table{:id => "arrivals-on-the-way"}
-  %thead
-    %tr
-      %th
-        Ident
-      %th
-        Type
-      %th
-        From
-      %th
-        Scheduled Departure
-      %th
-        Scheduled Arrival
-      %th
-        Estimated Arrival
-      %th
-        Status
-      %th
-        Flight Status
-      %th
-        Plain Status
-  %tbody
-  
-%h3
-  At Departure Airport
-
-%table{:id => "arrivals-at-departure-airport"}
-  %thead
-    %tr
-      %th
-        Ident
-      %th
-        Type
-      %th
-        From
-      %th
-        Scheduled Departure
-      %th
-        Scheduled Arrival
-      %th
-        Estimated Arrival
-      %th
-        Status
-      %th
-        Flight Status
-      %th
-        Plain Status
-  %tbody
+  %table{:id => "arrivals-at-departure-airport"}
+    %thead
+      %tr
+        %th
+          Ident
+        %th
+          Type
+        %th
+          To
+        %th
+          Scheduled Departure
+        %th
+          Scheduled Arrival
+        %th
+          Estimated Arrival
+        %th
+          Status
+        %th
+          Flight Status
+        %th
+          Plain Status
+    %tbody
 
 %h2
   Departures
 
-%h3
-  Boarding
+%div{:id => "div-departures-boarding"}
+  %h3
+    Boarding
 
-%table{:id => "departures-boarding"}
-  %thead
-    %tr
-      %th
-        Ident
-      %th
-        Type
-      %th
-        To
-      %th
-        Scheduled Departure
-      %th
-        Scheduled Arrival
-      %th
-        Estimated Arrival
-      %th
-        Status
-      %th
-        Flight Status
-      %th
-        Plain Status
-  %tbody
+  %table{:id => "departures-boarding"}
+    %thead
+      %tr
+        %th
+          Ident
+        %th
+          Type
+        %th
+          To
+        %th
+          Scheduled Departure
+        %th
+          Scheduled Arrival
+        %th
+          Estimated Arrival
+        %th
+          Status
+        %th
+          Flight Status
+        %th
+          Plain Status
+    %tbody
 
-%h3
-  Departed
+%div{:id => "div-departures-departed"}
+  %h3
+    Departed
 
-%table{:id => "departures-departed"}
-  %thead
-    %tr
-      %th
-        Ident
-      %th
-        Type
-      %th
-        To
-      %th
-        Scheduled Departure
-      %th
-        Scheduled Arrival
-      %th
-        Estimated Arrival
-      %th
-        Status
-      %th
-        Flight Status
-      %th
-        Plain Status
-  %tbody
+  %table{:id => "departures-departed"}
+    %thead
+      %tr
+        %th
+          Ident
+        %th
+          Type
+        %th
+          To
+        %th
+          Scheduled Departure
+        %th
+          Scheduled Arrival
+        %th
+          Estimated Arrival
+        %th
+          Status
+        %th
+          Flight Status
+        %th
+          Plain Status
+    %tbody
  
- 
-%h3
-  At Arrival Airport
 
-%table{:id => "departures-at-arrival-airport"}
-  %thead
-    %tr
-      %th
-        Ident
-      %th
-        Type
-      %th
-        To
-      %th
-        Scheduled Departure
-      %th
-        Scheduled Arrival
-      %th
-        Estimated Arrival
-      %th
-        Status
-      %th
-        Flight Status
-      %th
-        Plain Status
-  %tbody
+%div{:id => "div-departures-at-arrival-airport"}
+  %h3
+    At Arrival Airport
+
+  %table{:id => "departures-at-arrival-airport"}
+    %thead
+      %tr
+        %th
+          Ident
+        %th
+          Type
+        %th
+          To
+        %th
+          Scheduled Departure
+        %th
+          Scheduled Arrival
+        %th
+          Estimated Arrival
+        %th
+          Status
+        %th
+          Flight Status
+        %th
+          Plain Status
+    %tbody
 
 %h5{:id => "countdown"}
 

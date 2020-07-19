@@ -55,7 +55,11 @@ function load_arrivals(data)
     $("#arrivals-on-the-way > tbody > tr").remove();
     $("#arrivals-arrived > tbody > tr").remove();
     $("#arrivals-at-departure-airport > tbody > tr").remove();
-
+    
+    $("#div-arrivals-on-the-way").hide();
+    $("#div-arrivals-arrived").hide();
+    $("#div-arrivals-at-departure-airport").hide();
+    
     $.each(data, function(index, arrival) {
         table = "arrivals-on-the-way"
         if(arrival.flight_status == "On the way" || arrival.flight_status == "Departing")
@@ -70,6 +74,8 @@ function load_arrivals(data)
         arrival.scheduled_departure_time = arrival.scheduled_departure_time == null ? "" : arrival.scheduled_departure_time
         arrival.scheduled_arrival_time = arrival.scheduled_arrival_time == null ? "" : arrival.scheduled_arrival_time
         arrival.estimated_arrival_time = arrival.estimated_arrival_time == null ? "" : arrival.estimated_arrival_time
+
+        $("#div-" + table).show();
 
         $('#' + table + ' > tbody:last').append('<tr class=\"'+row_class+'\">' +
             '<td>'+arrival.callsign+'</td>' +
@@ -90,6 +96,10 @@ function load_departures(data)
     $("#departures-at-arrival-airport > tbody > tr").remove();
     $("#departures-boarding > tbody > tr").remove();
 
+    $("#div-departures-departed").hide();
+    $("#div-departures-at-arrival-airport").hide();
+    $("#div-departures-boarding").hide();
+  
     $.each(data, function(index, departure) {
         table = "departures-departed"
         if(departure.flight_status == "On the way" || departure.flight_status == "Departing")
@@ -104,6 +114,8 @@ function load_departures(data)
         departure.scheduled_departure_time = departure.scheduled_departure_time == null ? "" : departure.scheduled_departure_time
         departure.scheduled_arrival_time = departure.scheduled_arrival_time == null ? "" : departure.scheduled_arrival_time
         departure.estimated_arrival_time = departure.estimated_arrival_time == null ? "" : departure.estimated_arrival_time
+
+        $("#div-" + table).show();
 
         $('#' + table + ' > tbody:last').append('<tr class=\"'+row_class+'\">' +
             '<td>'+departure.callsign+'</td>' +
