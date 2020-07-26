@@ -2,6 +2,10 @@
   %script{:src => "/airports.js", :type => "text/javascript"}
   %script
     var icao = "#{params[:icao]}";
+  %link{:rel => "stylesheet", :href => "https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"}
+  %script{:src => "https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"}
+  %script{:src => "/leaflet.rotatedMarker.js", :type => "text/javascript"}
+
   %style{:type => "text/css"}
     \table { width: 90%; border-collapse: collapse; border-bottom: solid 1px #000000; }
     \tr { border: none; }
@@ -186,6 +190,8 @@
         %th
           Plain Status
     %tbody
+
+%div{:id => "map", :style => "width: 1000px; height: 800px"}
 
 %h5{:id => "countdown"}
 

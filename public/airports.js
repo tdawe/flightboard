@@ -1,11 +1,69 @@
 var updateTimeout;
 var downloadTimer;
+//var markers = [];
+var flightMarkers = [];
+var flightArrivals = [];
+var flightDepartures = []
+var map;
+var airportLocation;
+var caller = [];
+var mapMarkers = { markers: [] }
 
 $(document).ready(function() {
+    //flightMarkers = new Array();
+    loadMap();
     load_boards();
-    timer();
-    updateTime();
 });
+
+function loadMap() {
+    map = L.map('map', {
+    center: [51.505, -0.09],
+    zoom: 11
+    });
+    	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(map);
+   //markers = new L.FeatureGroup();
+   //markers.addTo(map);
+    setTimeout("centerMap();", 1000);
+
+}
+
+function centerMap() {
+    map.panTo(airportLocation);
+}
+
+function updateMarkers() {    
+    $.each(mapMarkers.markers, function(index, marker) {
+        map.removeLayer(marker);
+    });
+    
+    mapMarkers.markers = [];
+    
+    $.each(flightArrivals, function(index, flight) {
+        var plane = L.icon({ iconUrl: "/airplane.png", iconSize: [25, 25] })
+        var title = flight.callsign + "\n" + flight.planned_depairport + " - " + flight.planned_destairport + "\n" + flight.altitude + "ft / " + flight.groundspeed + "kts"
+        var marker = L.marker([flight.latitude, flight.longitude], {title: title, icon: plane, rotationAngle: flight.heading })
+        marker.addTo(map)
+        mapMarkers.markers.push(marker);
+
+    });
+           
+    $.each(flightDepartures, function(index, flight) {
+        var plane = L.icon({ iconUrl: "/airplane.png", iconSize: [25, 25] })
+        var title = flight.callsign + "\n" + flight.planned_depairport + " - " + flight.planned_destairport + "\n" + flight.altitude + "ft / " + flight.groundspeed + " kts"
+        var marker = L.marker([flight.latitude, flight.longitude], {title: title, icon: plane, rotationAngle: flight.heading })
+        marker.addTo(map)
+        mapMarkers.markers.push(marker);
+    });
+    console.log("after updateMarkers length = " + mapMarkers.markers.length);
+}
 
 function timer() {
     var timeleft = 150;
@@ -45,9 +103,15 @@ function load_boards()
 {
     clearTimeout(updateTimeout);
     timer();
-    $.getJSON("/airports/"+icao+"/arrivals.json", function(data) { load_arrivals(data) });
-    $.getJSON("/airports/"+icao+"/departures.json", function(data) { load_departures(data) });
-    updateTimeout = setTimeout("load_boards(); timer();", 150000);
+    $.getJSON("/airports/"+icao+"/arrivals.json", function(data) { 
+        load_arrivals(data);
+        $.getJSON("/airports/"+icao+"/departures.json", function(data) { 
+            load_departures(data);
+            updateMarkers();
+
+        });
+    });
+    updateTimeout = setTimeout("load_boards();", 150000);
 }
 
 function load_arrivals(data)
@@ -60,7 +124,10 @@ function load_arrivals(data)
     $("#div-arrivals-arrived").hide();
     $("#div-arrivals-at-departure-airport").hide();
     
+    flightArrivals = []
+    
     $.each(data, function(index, arrival) {
+        airportLocation = L.latLng(arrival.planned_destairport_lat, arrival.planned_destairport_lon)
         table = "arrivals-on-the-way"
         if(arrival.flight_status == "On the way" || arrival.flight_status == "Departing")
             table = "arrivals-on-the-way"
@@ -70,6 +137,8 @@ function load_arrivals(data)
             table = "arrivals-at-departure-airport"
         
         row_class = ""
+        
+        flightArrivals.push(arrival)
 
         arrival.scheduled_departure_time = arrival.scheduled_departure_time == null ? "" : arrival.scheduled_departure_time
         arrival.scheduled_arrival_time = arrival.scheduled_arrival_time == null ? "" : arrival.scheduled_arrival_time
@@ -100,7 +169,11 @@ function load_departures(data)
     $("#div-departures-at-arrival-airport").hide();
     $("#div-departures-boarding").hide();
   
+    flightDepartures = []
+    
     $.each(data, function(index, departure) {
+        airportLocation = L.latLng(departure.planned_depairport_lat, departure.planned_depairport_lon)
+
         table = "departures-departed"
         if(departure.flight_status == "On the way" || departure.flight_status == "Departing")
             table = "departures-departed"
@@ -110,6 +183,8 @@ function load_departures(data)
             table = "departures-boarding"
         
         row_class = ""
+
+        flightDepartures.push(departure)
 
         departure.scheduled_departure_time = departure.scheduled_departure_time == null ? "" : departure.scheduled_departure_time
         departure.scheduled_arrival_time = departure.scheduled_arrival_time == null ? "" : departure.scheduled_arrival_time
