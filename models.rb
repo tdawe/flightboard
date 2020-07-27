@@ -6,6 +6,8 @@ DataMapper::Property::String.length(255)
 class Pilot
   include DataMapper::Resource
   property :callsign, String, :key => true
+  property :active, Boolean, :default => true
+  property :locations, Object
   property :cid, String
   property :realname, String
   property :clienttype, String

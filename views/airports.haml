@@ -1,4 +1,5 @@
-- @airports.each do |airport|
+- @airports.each do |airport,movements|
   %p
     %a(href="/airports/#{airport}") #{airport}
+    (#{movements})
 

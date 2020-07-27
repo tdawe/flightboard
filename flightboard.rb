@@ -25,9 +25,15 @@ DataMapper.auto_upgrade!
 def refreshdata
   output = ""
   data = Vatsim::Data.new
+  start = Time.now
   Pilot.transaction do
     now = Time.parse("#{data.general['update']}Z")
-    Pilot.destroy
+    #Pilot.destroy
+    @logger.info("Set all pilots to inactive")
+    Pilot.update(:active => false)
+    @logger.info("All pilots set to inactive")
+      
+    @logger.info("Iterating through active pilots")
     data.pilots.each { |pilot|
       _scheduled_departure_time = scheduled_departure_time now, pilot
       _scheduled_arrival_time = scheduled_arrival_time now, pilot
@@ -37,10 +43,23 @@ def refreshdata
       _plain_text_status = plain_text_status pilot
       _distance_traveled = distance_traveled pilot
       _distance_remaining = distance_remaining pilot
-      Pilot.create(:callsign => pilot.callsign, :cid => pilot.cid, :realname => pilot.realname, :clienttype => pilot.clienttype, :latitude => pilot.latitude, :longitude => pilot.longitude, :altitude => pilot.altitude, :groundspeed => pilot.groundspeed, :planned_aircraft =>           pilot.planned_aircraft, :planned_tascruise => pilot.planned_tascruise, :planned_depairport => pilot.planned_depairport, :planned_altitude => pilot.planned_altitude, :planned_destairport => pilot.planned_destairport, :server => pilot.server, :protrevision => pilot.protrevision, :rating => pilot.rating, :transponder => pilot.transponder, :planned_revision => pilot.planned_revision, :planned_flighttype => pilot.planned_flighttype, :planned_deptime => pilot.planned_deptime, :planned_actdeptime => pilot.planned_actdeptime, :planned_hrsenroute => pilot.planned_minenroute, :planned_hrsfuel => pilot.planned_minfuel, :planned_altairport => pilot.planned_altairport, :planned_remarks => pilot.planned_remarks, :planned_route => pilot.planned_route, :planned_depairport_lat => pilot.planned_depairport_lat, :planned_depairport_lon => pilot.planned_depairport_lon, :planned_destairport_lat => pilot.planned_destairport_lat, :planned_destairport_lon => pilot.planned_destairport_lon, :time_logon => pilot.time_logon, :heading => pilot.heading, :QNH_iHg => pilot.QNH_iHg, :QNH_Mb => pilot.QNH_Mb, :scheduled_departure_time => _scheduled_departure_time, :scheduled_arrival_time => _scheduled_arrival_time, :estimated_arrival_time => _estimated_arrival_time, :arrival_status => _arrival_status, :flight_status => _flight_status, :plain_text_status => _plain_text_status, :distance_traveled => _distance_traveled, :distance_remaining => _distance_remaining)
+      
+      @found_pilot = Pilot.get(pilot.callsign)
+      if !@found_pilot.nil?
+         @logger.info("Found pilot #{pilot.callsign}")
+         locations = @found_pilot.locations
+         locations = locations.push([pilot.latitude.to_f, pilot.longitude.to_f])
+         Pilot.first_or_create({:callsign => pilot.callsign}).update(:callsign => pilot.callsign, :active => true, :locations => locations, :cid => pilot.cid, :realname => pilot.realname, :clienttype => pilot.clienttype, :latitude => pilot.latitude, :longitude => pilot.longitude, :altitude => pilot.altitude, :groundspeed => pilot.groundspeed, :planned_aircraft => pilot.planned_aircraft, :planned_tascruise => pilot.planned_tascruise, :planned_depairport => pilot.planned_depairport, :planned_altitude => pilot.planned_altitude, :planned_destairport => pilot.planned_destairport, :server => pilot.server, :protrevision => pilot.protrevision, :rating => pilot.rating, :transponder => pilot.transponder, :planned_revision => pilot.planned_revision, :planned_flighttype => pilot.planned_flighttype, :planned_deptime => pilot.planned_deptime, :planned_actdeptime => pilot.planned_actdeptime, :planned_hrsenroute => pilot.planned_minenroute, :planned_hrsfuel => pilot.planned_minfuel, :planned_altairport => pilot.planned_altairport, :planned_remarks => pilot.planned_remarks, :planned_route => pilot.planned_route, :planned_depairport_lat => pilot.planned_depairport_lat, :planned_depairport_lon => pilot.planned_depairport_lon, :planned_destairport_lat => pilot.planned_destairport_lat, :planned_destairport_lon => pilot.planned_destairport_lon, :time_logon => pilot.time_logon, :heading => pilot.heading, :QNH_iHg => pilot.QNH_iHg, :QNH_Mb => pilot.QNH_Mb, :scheduled_departure_time => _scheduled_departure_time, :scheduled_arrival_time => _scheduled_arrival_time, :estimated_arrival_time => _estimated_arrival_time, :arrival_status => _arrival_status, :flight_status => _flight_status, :plain_text_status => _plain_text_status, :distance_traveled => _distance_traveled, :distance_remaining => _distance_remaining)
+          @found_pilot.save
+      else
+         @logger.info("Creating pilot #{pilot.callsign}")
+        locations = [[pilot.latitude.to_f, pilot.longitude.to_f]]
+        Pilot.create(:callsign => pilot.callsign, :active => true, :locations => locations, :cid => pilot.cid, :realname => pilot.realname, :clienttype => pilot.clienttype, :latitude => pilot.latitude, :longitude => pilot.longitude, :altitude => pilot.altitude, :groundspeed => pilot.groundspeed, :planned_aircraft =>           pilot.planned_aircraft, :planned_tascruise => pilot.planned_tascruise, :planned_depairport => pilot.planned_depairport, :planned_altitude => pilot.planned_altitude, :planned_destairport => pilot.planned_destairport, :server => pilot.server, :protrevision => pilot.protrevision, :rating => pilot.rating, :transponder => pilot.transponder, :planned_revision => pilot.planned_revision, :planned_flighttype => pilot.planned_flighttype, :planned_deptime => pilot.planned_deptime, :planned_actdeptime => pilot.planned_actdeptime, :planned_hrsenroute => pilot.planned_minenroute, :planned_hrsfuel => pilot.planned_minfuel, :planned_altairport => pilot.planned_altairport, :planned_remarks => pilot.planned_remarks, :planned_route => pilot.planned_route, :planned_depairport_lat => pilot.planned_depairport_lat, :planned_depairport_lon => pilot.planned_depairport_lon, :planned_destairport_lat => pilot.planned_destairport_lat, :planned_destairport_lon => pilot.planned_destairport_lon, :time_logon => pilot.time_logon, :heading => pilot.heading, :QNH_iHg => pilot.QNH_iHg, :QNH_Mb => pilot.QNH_Mb, :scheduled_departure_time => _scheduled_departure_time, :scheduled_arrival_time => _scheduled_arrival_time, :estimated_arrival_time => _estimated_arrival_time, :arrival_status => _arrival_status, :flight_status => _flight_status, :plain_text_status => _plain_text_status, :distance_traveled => _distance_traveled, :distance_remaining => _distance_remaining)
+      end
     }
   end
   @logger.info("Loaded #{Pilot.all.length} pilots")
+  @logger.info("Took #{Time.now - start} seconds to update")
 end
 
 get '/' do
@@ -65,23 +84,29 @@ end
 
 get '/airports' do
   pilots = Pilot.all
-  @airports = Array.new
+  @airports = {} #Array.new
   pilots.each { |pilot|
-    @airports << pilot.planned_depairport if !@airports.include?(pilot.planned_depairport)
-    @airports << pilot.planned_destairport if !@airports.include?(pilot.planned_destairport)
+    if pilot.active?
+      @airports[pilot.planned_depairport] = 0 if !@airports[pilot.planned_depairport]
+      @airports[pilot.planned_destairport] = 0 if !@airports[pilot.planned_destairport]
+      @airports[pilot.planned_depairport] = @airports[pilot.planned_depairport] + 1
+      @airports[pilot.planned_destairport] = @airports[pilot.planned_destairport] + 1
+      #@airports << pilot.planned_depairport if !@airports.include?(pilot.planned_depairport)
+      #@airports << pilot.planned_destairport if !@airports.include?(pilot.planned_destairport)
+    end
   }
-  @airports.sort!
+  @airports = @airports.sort_by {|airport, movements| 0 - movements }
   haml :airports
 end
 
 get '/airports/:icao' do
-  @arrivals = Pilot.all(:planned_destairport => params[:icao], :order => [:scheduled_arrival_time.asc])
-  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:scheduled_departure_time.asc])
+  @arrivals = Pilot.all(:active => true, :planned_destairport => params[:icao], :order => [:scheduled_arrival_time.asc])
+  @departures = Pilot.all(:active => true, :planned_depairport => params[:icao], :order => [:scheduled_departure_time.asc])
   haml :airport
 end
 
 get '/airports/:icao/arrivals.json' do
-  @arrivals = Pilot.all(:planned_destairport => params[:icao], :order => [:distance_remaining.asc])
+  @arrivals = Pilot.all(:active => true, :planned_destairport => params[:icao], :order => [:distance_remaining.asc])
 
   @arrivals.each { |arrival|
     arrival.scheduled_departure_time = arrival.scheduled_departure_time.nil? ? "" : Time.parse(arrival.scheduled_departure_time).strftime("%R %Z")
@@ -92,7 +117,7 @@ get '/airports/:icao/arrivals.json' do
 end
 
 get '/airports/:icao/departures.json' do
-  @departures = Pilot.all(:planned_depairport => params[:icao], :order => [:distance_traveled.asc])
+  @departures = Pilot.all(:active => true, :planned_depairport => params[:icao], :order => [:distance_traveled.asc])
   @departures.each { |departure|
     departure.scheduled_departure_time = departure.scheduled_departure_time.nil? ? "" : Time.parse(departure.scheduled_departure_time).strftime("%R %Z")
     departure.scheduled_arrival_time = departure.scheduled_arrival_time.nil? ? "" : Time.parse(departure.scheduled_arrival_time).strftime("%R %Z")

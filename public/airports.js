@@ -47,20 +47,26 @@ function updateMarkers() {
     mapMarkers.markers = [];
     
     $.each(flightArrivals, function(index, flight) {
-        var plane = L.icon({ iconUrl: "/airplane.png", iconSize: [25, 25] })
+        var plane = L.icon({ iconUrl: "/airplane.png", iconSize: [25, 25], iconAnchor: [12, 12] })
         var title = flight.callsign + "\n" + flight.planned_depairport + " - " + flight.planned_destairport + "\n" + flight.altitude + "ft / " + flight.groundspeed + "kts"
         var marker = L.marker([flight.latitude, flight.longitude], {title: title, icon: plane, rotationAngle: flight.heading })
         marker.addTo(map)
         mapMarkers.markers.push(marker);
+        
+        var polyline = L.polyline(flight.locations, {color: 'red'}).addTo(map);
+        mapMarkers.markers.push(polyline);
 
     });
            
     $.each(flightDepartures, function(index, flight) {
-        var plane = L.icon({ iconUrl: "/airplane.png", iconSize: [25, 25] })
+        var plane = L.icon({ iconUrl: "/airplane.png", iconSize: [25, 25], iconAnchor: [12, 12] })
         var title = flight.callsign + "\n" + flight.planned_depairport + " - " + flight.planned_destairport + "\n" + flight.altitude + "ft / " + flight.groundspeed + " kts"
         var marker = L.marker([flight.latitude, flight.longitude], {title: title, icon: plane, rotationAngle: flight.heading })
         marker.addTo(map)
         mapMarkers.markers.push(marker);
+        
+        var polyline = L.polyline(flight.locations, {color: 'blue'}).addTo(map);
+        mapMarkers.markers.push(polyline);
     });
     console.log("after updateMarkers length = " + mapMarkers.markers.length);
 }
