@@ -1,5 +1,52 @@
-%h1
-  #{@pilot.callsign}
-%p
-  #{@pilot.planned_depairport} - #{@pilot.planned_destairport}
+- content_for :some_key do
+  %script{:src => "/pilot.js", :type => "text/javascript"}
+  %script
+    var callsign = "#{params[:callsign]}";
+  %link{:rel => "stylesheet", :href => "https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"}
+  %script{:src => "https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"}
+  %script{:src => "/leaflet.rotatedMarker.js", :type => "text/javascript"}
 
+  %style{:type => "text/css"}
+    \table { width: 90%; border-collapse: collapse; border-bottom: solid 1px #000000; }
+    \tr { border: none; }
+    \td { padding: 3px; border-right: solid 1px #000000; border-left: solid 1px #000000; }
+    \th { padding: 5px; border: solid 1px #000000; }
+    \tr:nth-child(even) {background: #CCC}
+    \tr:nth-child(odd) {background: #FFF}
+    \tr.on_time { background-color: #00ff00; }
+    \tr.late { background-color: #DB2929; }
+    \tr.early { background-color: #4169E1; }
+
+%h1{:style => "display: inline", :onclick => "load_boards();"}
+  #{params[:callsign]} - 
+
+%h1{:style => "display: inline", :id => "currenttime"}
+
+%table{:id => "pilot-status"}
+  %thead
+    %tr
+      %th
+        Ident
+      %th
+        Type
+      %th
+        From
+      %th
+        To
+      %th
+        Scheduled Departure
+      %th
+        Scheduled Arrival
+      %th
+        Estimated Arrival
+      %th
+        Status
+      %th
+        Flight Status
+      %th
+        Plain Status
+    %tbody
+
+%div{:id => "map", :style => "width: 1000px; height: 600px"}
+
+%h5{:id => "countdown"}

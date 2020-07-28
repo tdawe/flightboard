@@ -153,9 +153,9 @@ function load_arrivals(data)
         $("#div-" + table).show();
 
         $('#' + table + ' > tbody:last').append('<tr class=\"'+row_class+'\">' +
-            '<td>'+arrival.callsign+'</td>' +
+            '<td><a href="/pilots/'+arrival.callsign+'">'+arrival.callsign+'</a></td>' +
             '<td>'+arrival.planned_aircraft+'</td>' +
-            '<td>'+arrival.planned_depairport+'</td>' +
+            '<td><a href="/airports/'+arrival.planned_depairport+'">'+arrival.planned_depairport+'</a></td>' +
             '<td>'+arrival.scheduled_departure_time+'</td>' +
             '<td>'+arrival.scheduled_arrival_time+'</td>' +
             '<td>'+arrival.estimated_arrival_time+'</td>' +
@@ -199,9 +199,9 @@ function load_departures(data)
         $("#div-" + table).show();
 
         $('#' + table + ' > tbody:last').append('<tr class=\"'+row_class+'\">' +
-            '<td>'+departure.callsign+'</td>' +
+            '<td><a href="/pilots/'+departure.callsign+'">'+departure.callsign+'</a></td>' +
             '<td>'+departure.planned_aircraft+'</td>' +
-            '<td>'+departure.planned_destairport+'</td>' +
+            '<td><a href="/airports/'+departure.planned_destairport+'">'+departure.planned_destairport+'</a></td>' +
             '<td>'+departure.scheduled_departure_time+'</td>' +
             '<td>'+departure.scheduled_arrival_time+'</td>' +
             '<td>'+departure.estimated_arrival_time+'</td>' +

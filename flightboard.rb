@@ -105,6 +105,17 @@ get '/airports/:icao' do
   haml :airport
 end
 
+
+get '/pilots/:callsign/status.json' do
+  @pilot = Pilot.get(params[:callsign])
+
+  @pilot.scheduled_departure_time = @pilot.scheduled_departure_time.nil? ? "" : Time.parse(@pilot.scheduled_departure_time).strftime("%R %Z")
+  @pilot.scheduled_arrival_time = @pilot.scheduled_arrival_time.nil? ? "" : Time.parse(@pilot.scheduled_arrival_time).strftime("%R %Z")
+  @pilot.estimated_arrival_time = @pilot.estimated_arrival_time.nil? ? "" : Time.parse(@pilot.estimated_arrival_time).strftime("%R %Z")
+
+  @pilot.to_json
+end
+
 get '/airports/:icao/arrivals.json' do
   @arrivals = Pilot.all(:active => true, :planned_destairport => params[:icao], :order => [:distance_remaining.asc])
 
